@@ -120,7 +120,7 @@ func CheckTicketPrice(db *gorm.DB, secretKey []byte) echo.HandlerFunc {
 		var usedPoints int
 
 		if ticketPurchase.UseAllPoints {
-			// Calculate the maximum points that can be use
+			// Calculate the maximum points that can be used
 			maxPoints := totalCost / 1000
 			if maxPoints > user.Points {
 				maxPoints = user.Points

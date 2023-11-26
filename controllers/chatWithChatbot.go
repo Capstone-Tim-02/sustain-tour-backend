@@ -119,7 +119,7 @@ func RecommendWisata(c echo.Context, wisataUsecase WisataUsecase) error {
 	}
 
 	responseData := WisataResponse{
-		Status: "success",
+		Status: "success ",
 		Data:   answer,
 	}
 

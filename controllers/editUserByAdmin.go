@@ -114,9 +114,6 @@ func EditUserByAdmin(db *gorm.DB, secretKey []byte) echo.HandlerFunc {
 				return c.JSON(http.StatusBadRequest, errorResponse)
 			}
 			user.Name = req.Name
-		} else if req.Name == "" {
-			errorResponse := helper.ErrorResponse{Code: http.StatusBadRequest, Message: "Must update some data"}
-			return c.JSON(http.StatusBadRequest, errorResponse)
 		}
 
 		// Update user data

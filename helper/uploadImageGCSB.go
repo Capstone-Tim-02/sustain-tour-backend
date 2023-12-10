@@ -19,7 +19,7 @@ func UploadImageToGCS(imageData []byte, imageName string) (string, error) {
 		return "", err
 	}
 
-	bucketName := "relaverse"
+	bucketName := "destimate"
 
 	object := client.Bucket(bucketName).Object(imageName)
 	wc := object.NewWriter(ctx)
@@ -55,7 +55,7 @@ func DeleteImageFromGCS(imageURL string) error {
 		return err
 	}
 
-	bucketName := "relaverse"
+	bucketName := "destimate"
 
 	// Mendapatkan nama objek dari URL gambar
 	imageParts := strings.Split(imageURL, "/")

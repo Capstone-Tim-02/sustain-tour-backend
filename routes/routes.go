@@ -1,14 +1,30 @@
 package routes
 
 import (
-	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 	"io/ioutil"
 	"log"
+	"myproject/config"
 	"myproject/controllers"
 	"net/http"
 	"os"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"gorm.io/gorm"
 )
+
+func SetupRouter() *echo.Echo {
+	db, err := config.InitializeDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
+	router := echo.New()
+	router.Use(middleware.Logger())
+	router.Use(middleware.CORS())
+	router.Pre(middleware.RemoveTrailingSlash())
+	SetupRoutes(router, db)
+	return router
+}
 
 func ServeHTML(c echo.Context) error {
 	htmlData, err := ioutil.ReadFile("index.html")

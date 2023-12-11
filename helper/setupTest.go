@@ -37,10 +37,10 @@ func InsertUserForTest(db *gorm.DB) error {
 
 	users := []model.User{
 		{ID: 1900, Name: "Bryan", Email: "abc", PhoneNumber: "123", Username: "abc"},
-		{ID: 1901, Name: "Rizqi", Email: "bcd", PhoneNumber: "234", Username: "bcd"},
-		{ID: 1902, Name: "Yha", Email: "cde", PhoneNumber: "345", Username: "cde"},
-		{ID: 1903, Name: "Okh", Email: "def", PhoneNumber: "456", Username: "def"},
-		{ID: 1904, Name: "Seep", Email: "efg", PhoneNumber: "567", Username: "efg"},
+		{ID: 1910, Name: "Rizqi", Email: "bcd", PhoneNumber: "234", Username: "bcd"},
+		{ID: 1920, Name: "Yha", Email: "cde", PhoneNumber: "345", Username: "cde"},
+		{ID: 1930, Name: "Okh", Email: "def", PhoneNumber: "456", Username: "def"},
+		{ID: 1940, Name: "Seep", Email: "efg", PhoneNumber: "567", Username: "efg"},
 	}
 
 	err := db.Create(users).Error
@@ -54,7 +54,7 @@ func InsertUserForTest(db *gorm.DB) error {
 
 func DeleteUserForTest(db *gorm.DB) error {
 
-	users := []model.User{{ID: 1900}, {ID: 1901}, {ID: 1902}, {ID: 1903}, {ID: 1904}}
+	users := []model.User{{ID: 1900}, {ID: 1910}, {ID: 1920}, {ID: 1930}, {ID: 1940}}
 
 	err := db.Delete(users).Error
 	if err != nil {

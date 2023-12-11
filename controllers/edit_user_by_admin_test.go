@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"myproject/helper"
 	"myproject/middleware"
-	"myproject/model"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -18,7 +17,7 @@ import (
 func TestEditUserByAdmin(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
-	db, err := helper.InitDBTest("sustain_tour_test_false")
+	db, err := helper.InitDBTest("sustain_tour_test")
 	if err != nil {
 		panic(err)
 	}
@@ -71,14 +70,19 @@ func TestEditUserByAdmin(t *testing.T) {
 
 	adminToken, _ := middleware.GenerateToken("admin", []byte(secretKey))
 	userToken, _ := middleware.GenerateToken("putrishn27", []byte(secretKey))
+	anyUser, _ := middleware.GenerateToken("any", []byte(secretKey))
 	falseToken := "false_token"
 
 	var testCases = []struct {
-		name       string
-		path       string
-		expectCode int
-		userId     string
-		token      string
+		name        string
+		path        string
+		expectCode  int
+		userId      string
+		token       string
+		Username    any    `json:"username"`
+		PhoneNumber string `json:"phone_number"`
+		Email       string `json:"email"`
+		Name        string `json:"name"`
 	}{
 		{
 			name:       "Unauthorized",
@@ -92,7 +96,7 @@ func TestEditUserByAdmin(t *testing.T) {
 			path:       "/",
 			expectCode: http.StatusNotFound,
 			userId:     "1900",
-			token:      userToken,
+			token:      anyUser,
 		},
 		{
 			name:       "Not Admin",
@@ -114,46 +118,85 @@ func TestEditUserByAdmin(t *testing.T) {
 			expectCode: http.StatusBadRequest,
 			userId:     "1900",
 			token:      adminToken,
+			Username:   123,
 		},
 		{
-			name:       "Success",
+			name:       "Username validation 1",
 			path:       "/",
-			expectCode: http.StatusOK,
+			expectCode: http.StatusBadRequest,
 			userId:     "1900",
 			token:      adminToken,
+			Username:   "ok",
+		},
+		{
+			name:       "Username validation 2",
+			path:       "/",
+			expectCode: http.StatusConflict,
+			userId:     "1900",
+			token:      adminToken,
+			Username:   "putrishn27",
+		},
+		{
+			name:        "Phone number validation 1",
+			path:        "/",
+			expectCode:  http.StatusBadRequest,
+			userId:      "1900",
+			token:       adminToken,
+			PhoneNumber: "wrong",
+		},
+		{
+			name:        "Phone number validation 2",
+			path:        "/",
+			expectCode:  http.StatusConflict,
+			userId:      "1900",
+			token:       adminToken,
+			PhoneNumber: "7154397970",
+		},
+		{
+			name:       "Email validation 1",
+			path:       "/",
+			expectCode: http.StatusBadRequest,
+			userId:     "1900",
+			token:      adminToken,
+			Email:      "wrong",
+		},
+		{
+			name:       "Email validation 2",
+			path:       "/",
+			expectCode: http.StatusConflict,
+			userId:     "1900",
+			token:      adminToken,
+			Email:      "angeline123@gmail.com",
+		},
+		{
+			name:       "Name validation",
+			path:       "/",
+			expectCode: http.StatusBadRequest,
+			userId:     "1900",
+			token:      adminToken,
+			Name:       "ok",
+		},
+		{
+			name:        "Success",
+			path:        "/",
+			expectCode:  http.StatusOK,
+			userId:      "1900",
+			token:       adminToken,
+			Username:    "prakozov123",
+			PhoneNumber: "0897777777777",
+			Email:       "bryanrp777@gmail.com",
+			Name:        "Bryan Rizqiev",
 		},
 	}
 
-	invalidRequest := struct {
-		Name int `json:"name"`
-	}{
-		Name: 7676,
-	}
-	validRequest := model.User{
-		Name: "Bryan Rizqi",
-	}
+	err = helper.DeleteUserForTest(db)
+	assert.NoError(t, err)
+	err = helper.InsertUserForTest(db)
+	assert.NoError(t, err)
 
-	jsonBody, _ := json.Marshal(invalidRequest)
+	for _, testCase := range testCases {
 
-	for idx, testCase := range testCases {
-
-		if idx == 2 {
-			var err error
-
-			db, err = helper.InitDBTest("sustain_tour_test")
-			if err != nil {
-				assert.NoError(t, err)
-			}
-
-			err = helper.DeleteUserForTest(db)
-			assert.NoError(t, err)
-			err = helper.InsertUserForTest(db)
-			assert.NoError(t, err)
-		}
-
-		if idx == 5 {
-			jsonBody, _ = json.Marshal(validRequest)
-		}
+		jsonBody, _ := json.Marshal(testCase)
 
 		t.Run(testCase.name, func(t *testing.T) {
 

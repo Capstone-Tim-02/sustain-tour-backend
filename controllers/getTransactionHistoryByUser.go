@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetTransactionHistoryByInvoiceNumber(db *gorm.DB, secretKey []byte) echo.HandlerFunc {
+func GetTransactionHistoryByInvoiceNumber__(db *gorm.DB, secretKey []byte) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// Mendapatkan token dari header Authorization
 		tokenString := c.Request().Header.Get("Authorization")

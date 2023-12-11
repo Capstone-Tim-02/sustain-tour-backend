@@ -42,6 +42,7 @@ func SetupRoutes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/user/wisata", controllers.GetTicketsByUser(db, secretKey))
 	e.GET("/user/wisata/:invoice_number", controllers.GetTransactionHistoryByInvoiceNumber(db, secretKey))
 	e.GET("/user/notification", controllers.GetUserNotifications(db, secretKey))
+	e.PUT("/user/notification/:id", controllers.MarkNotificationAsRead(db, secretKey))
 	e.POST("/createpromo", controllers.CreatePromo(db, secretKey))
 	e.POST("/createcategory", controllers.CreateCategoryByAdmin(db, secretKey))
 	e.GET("/user/promo", controllers.GetPromos(db, secretKey))

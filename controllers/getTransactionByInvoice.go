@@ -94,10 +94,10 @@ func GetTransactionHistoryByInvoiceNumber(db *gorm.DB, secretKey []byte) echo.Ha
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"code":                http.StatusOK,
-			"error":               false,
-			"message":             "Transaction history retrieved successfully",
-			"transaction_details": transactionDetails,
+			"code":        http.StatusOK,
+			"error":       false,
+			"message":     "Transaction history retrieved successfully",
+			"ticket_data": transactionDetails,
 		})
 
 	}

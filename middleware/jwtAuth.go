@@ -2,8 +2,9 @@ package middleware
 
 import (
 	"errors"
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 type Claims struct {
@@ -52,4 +53,25 @@ func VerifyToken(tokenString string, secretKey []byte) (string, error) {
 	} else {
 		return "", errors.New("Invalid token")
 	}
+}
+
+func GenerateExpiredToken(expiredAt time.Time) (string, error) {
+	// Membuat klaim JWT dengan waktu kadaluwarsa yang sudah lewat
+	claims := &Claims{
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expiredAt.Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+	}
+
+	// Membuat token JWT dengan metode None
+	token := jwt.NewWithClaims(jwt.SigningMethodNone, claims)
+
+	// Menghasilkan token tanpa menandatanganinya
+	tokenString, err := token.SignedString(jwt.UnsafeAllowNoneSignatureType)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 }

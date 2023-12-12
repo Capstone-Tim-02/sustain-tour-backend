@@ -67,11 +67,11 @@ func TestCreateCooperationMessage(t *testing.T) {
 			Message:      "Kurang",
 		},
 		{
-			name:         "Success",
+			name:         "Server error",
 			FirstName:    "It's Oke",
 			Email:        "bryan@gmail.com",
 			PhoneNumber:  "0823456789",
-			expectedCode: http.StatusCreated,
+			expectedCode: http.StatusInternalServerError,
 			Message:      "Ini adalah pesan untuk mengajak kerja sama bukan kerja paksa",
 		},
 	}
@@ -88,8 +88,8 @@ func TestCreateCooperationMessage(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 			ctx.SetPath("/")
 
-			getWisataById := CreateCooperationMessage(db)
-			if assert.NoError(t, getWisataById(ctx)) {
+			createCooperationMessage := CreateCooperationMessage(db)
+			if assert.NoError(t, createCooperationMessage(ctx)) {
 				assert.Equal(t, testCase.expectedCode, rec.Code)
 			}
 

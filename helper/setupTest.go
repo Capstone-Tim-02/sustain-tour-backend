@@ -9,8 +9,11 @@ import (
 	"gorm.io/gorm"
 )
 
-const EMPTY_DB = "sustain_tour_test_false"
+// Database yang disediakan di direktori
 const TESTING_DB = "sustain_tour_test"
+
+// Database kosong atau tanpa tabel
+const EMPTY_DB = "sustain_tour_test_false"
 
 func InitDBTest(dbName string) (*gorm.DB, error) {
 

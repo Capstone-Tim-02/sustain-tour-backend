@@ -15,7 +15,7 @@ import (
 func TestCreateCooperationMessage(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
-	db, err := helper.InitDBTest("sustain_tour_test_false")
+	db, err := helper.InitDBTest(helper.TESTING_DB)
 	if err != nil {
 		panic(err)
 	}

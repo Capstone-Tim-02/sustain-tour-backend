@@ -35,7 +35,7 @@ func GetMonthlyTicketIncomeByAdmin(db *gorm.DB, secretKey []byte) echo.HandlerFu
 			return c.JSON(http.StatusUnauthorized, errorResponse)
 		}
 
-		// logic
+		// Logic
 
 		var adminUser model.User
 		result := db.Where("username = ?", username).First(&adminUser)

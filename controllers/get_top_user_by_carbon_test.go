@@ -15,7 +15,7 @@ import (
 func TestGetTopUserByCarbon(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
-	db, err := helper.InitDBTest("sustain_tour_test_false")
+	db, err := helper.InitDBTest(helper.TESTING_DB)
 	if err != nil {
 		panic(err)
 	}
@@ -84,13 +84,13 @@ func TestGetTopUserByCarbon(t *testing.T) {
 			token:      falseToken,
 		},
 		{
-			name:       "User Request Not Found",
+			name:       "User request not found",
 			path:       "/",
 			expectCode: http.StatusNotFound,
 			token:      anyUserToken,
 		},
 		{
-			name:       "Not Admin",
+			name:       "Not admin",
 			path:       "/",
 			expectCode: http.StatusForbidden,
 			token:      userToken,
@@ -101,11 +101,6 @@ func TestGetTopUserByCarbon(t *testing.T) {
 			expectCode: http.StatusOK,
 			token:      adminToken,
 		},
-	}
-
-	db, err = helper.InitDBTest("sustain_tour_test")
-	if err != nil {
-		panic(err)
 	}
 
 	for _, testCase := range testCases {

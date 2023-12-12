@@ -34,7 +34,7 @@ func GetTotalCarbonFootprintByWisataID(db *gorm.DB, secretKey []byte) echo.Handl
 			return c.JSON(http.StatusUnauthorized, errorResponse)
 		}
 
-		// logic
+		// Logic
 
 		wisataID := c.Param("wisata_id")
 		if wisataID == "" {

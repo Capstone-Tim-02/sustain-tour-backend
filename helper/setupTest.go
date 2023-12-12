@@ -9,6 +9,9 @@ import (
 	"gorm.io/gorm"
 )
 
+const EMPTY_DB = "sustain_tour_test_false"
+const TESTING_DB = "sustain_tour_test"
+
 func InitDBTest(dbName string) (*gorm.DB, error) {
 
 	const DB_USER_TEST = "root"
@@ -40,7 +43,7 @@ func InsertUserForTest(db *gorm.DB) error {
 		{ID: 1910, Name: "Rizqi", Email: "bcd", PhoneNumber: "234", Username: "bcd"},
 		{ID: 1920, Name: "Yha", Email: "cde", PhoneNumber: "345", Username: "cde"},
 		{ID: 1930, Name: "Okh", Email: "def", PhoneNumber: "456", Username: "def"},
-		{ID: 1940, Name: "Seep", Email: "efg", PhoneNumber: "567", Username: "efg"},
+		{ID: 1940, Name: "Seeb", Email: "efg", PhoneNumber: "567", Username: "efg"},
 	}
 
 	err := db.Create(users).Error

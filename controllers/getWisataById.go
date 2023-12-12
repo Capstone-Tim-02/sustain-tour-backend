@@ -35,7 +35,7 @@ func GetWisataByID(db *gorm.DB, secretKey []byte) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, errorResponse)
 		}
 
-		// logic
+		// Logic
 
 		wisataIDParam := c.Param("id")
 

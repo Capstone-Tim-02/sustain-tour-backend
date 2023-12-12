@@ -15,7 +15,7 @@ import (
 func TestDeleteUserByAdmin(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
-	db, err := helper.InitDBTest("sustain_tour_test_false")
+	db, err := helper.InitDBTest(helper.EMPTY_DB)
 	if err != nil {
 		panic(err)
 	}
@@ -77,17 +77,17 @@ func TestDeleteUserByAdmin(t *testing.T) {
 			expectCode: http.StatusUnauthorized,
 		},
 		{
-			name:       "Server Error",
+			name:       "Server error",
 			path:       "/",
 			expectCode: http.StatusInternalServerError,
 		},
 		{
-			name:       "Not Admin",
+			name:       "Not admin",
 			path:       "/",
 			expectCode: http.StatusForbidden,
 		},
 		{
-			name:       "User Not Found",
+			name:       "User not found",
 			path:       "/",
 			expectCode: http.StatusNotFound,
 		},
@@ -114,7 +114,7 @@ func TestDeleteUserByAdmin(t *testing.T) {
 		if idx == 2 {
 			var err error
 
-			db, err = helper.InitDBTest("sustain_tour_test")
+			db, err = helper.InitDBTest(helper.TESTING_DB)
 			if err != nil {
 				assert.NoError(t, err)
 			}

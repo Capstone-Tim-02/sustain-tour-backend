@@ -15,7 +15,7 @@ import (
 func TestGetWisataById(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
-	db, err := helper.InitDBTest("sustain_tour_test_false")
+	db, err := helper.InitDBTest(helper.TESTING_DB)
 	if err != nil {
 		panic(err)
 	}
@@ -69,11 +69,6 @@ func TestGetWisataById(t *testing.T) {
 	userToken, _ := middleware.GenerateToken("putrishn27", []byte(secretKey))
 	falseToken := "false_token"
 
-	db, err = helper.InitDBTest("sustain_tour_test")
-	if err != nil {
-		panic(err)
-	}
-
 	var testCases = []struct {
 		name       string
 		path       string
@@ -121,11 +116,11 @@ func TestGetWisataById(t *testing.T) {
 	for idx, testCase := range testCases {
 
 		if idx == 3 {
-			db, err = helper.InitDBTest("sustain_tour_test_false")
+			db, err = helper.InitDBTest(helper.EMPTY_DB)
 			assert.NoError(t, err)
 		}
 		if idx == 4 {
-			db, err = helper.InitDBTest("sustain_tour_test")
+			db, err = helper.InitDBTest(helper.TESTING_DB)
 			assert.NoError(t, err)
 		}
 

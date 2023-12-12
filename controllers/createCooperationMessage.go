@@ -57,20 +57,21 @@ func CreateCooperationMessage(db *gorm.DB) echo.HandlerFunc {
 		// Simpan pesan ke database
 		db.Create(&cooperationMessage)
 
-		// adminEmailSubject := "New Cooperation Message"
-		// adminEmailBody := helper.GetCooperationEmailBody(cooperationMessage)
-		// if err := helper.SendEmailToUser(adminEmail, adminEmailSubject, adminEmailBody); err != nil {
-		// 	errorResponse := helper.ErrorResponse{Code: http.StatusInternalServerError, Message: "Failed to send email to admin"}
-		// 	return c.JSON(http.StatusInternalServerError, errorResponse)
-		// }
+		// Kirim email ke admin
+		adminEmailSubject := "New Cooperation Message"
+		adminEmailBody := helper.GetCooperationEmailBody(cooperationMessage)
+		if err := helper.SendEmailToUser(adminEmail, adminEmailSubject, adminEmailBody); err != nil {
+			errorResponse := helper.ErrorResponse{Code: http.StatusInternalServerError, Message: "Failed to send email to admin"}
+			return c.JSON(http.StatusInternalServerError, errorResponse)
+		}
 
-		// // Kirim email balasan ke pengirim pesan
-		// userEmailSubject := "Your Cooperation Message"
-		// userEmailBody := helper.GetUserCooperationEmailBody(cooperationMessage)
-		// if err := helper.SendEmailToUser(cooperationMessage.Email, userEmailSubject, userEmailBody); err != nil {
-		// 	errorResponse := helper.ErrorResponse{Code: http.StatusInternalServerError, Message: "Failed to send email to user"}
-		// 	return c.JSON(http.StatusInternalServerError, errorResponse)
-		// }
+		// Kirim email balasan ke pengirim pesan
+		userEmailSubject := "Your Cooperation Message"
+		userEmailBody := helper.GetUserCooperationEmailBody(cooperationMessage)
+		if err := helper.SendEmailToUser(cooperationMessage.Email, userEmailSubject, userEmailBody); err != nil {
+			errorResponse := helper.ErrorResponse{Code: http.StatusInternalServerError, Message: "Failed to send email to user"}
+			return c.JSON(http.StatusInternalServerError, errorResponse)
+		}
 
 		return c.JSON(http.StatusCreated, map[string]interface{}{
 			"code":    http.StatusCreated,

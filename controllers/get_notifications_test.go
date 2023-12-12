@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetUserCarbon(t *testing.T) {
+func TestGetNotifications(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
 	db, err := helper.InitDBTest(helper.TESTING_DB)
@@ -57,8 +57,8 @@ func TestGetUserCarbon(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 			ctx.SetPath("/")
 
-			getUsercarbon := GetTotalCarbonFootprintByUser(db, []byte(secretKey))
-			if assert.NoError(t, getUsercarbon(ctx)) {
+			getNotifications := GetUserNotifications(db, []byte(secretKey))
+			if assert.NoError(t, getNotifications(ctx)) {
 				assert.Equal(t, tokenTestCase.expectedCode, rec.Code)
 			}
 
@@ -66,45 +66,28 @@ func TestGetUserCarbon(t *testing.T) {
 
 	}
 
-	adminToken, _ := middleware.GenerateToken("admin", []byte(secretKey))
-	userToken, _ := middleware.GenerateToken("putrishn27", []byte(secretKey))
-	anyUser, _ := middleware.GenerateToken("any", []byte(secretKey))
+	userToken, _ := middleware.GenerateToken("aimrzki", []byte(secretKey))
+	anyUserToken, _ := middleware.GenerateToken("anyUser", []byte(secretKey))
 	falseToken := "false_token"
 
 	testCases := []struct {
 		name         string
 		token        string
-		userId       string
 		expectedCode int
 	}{
 		{
 			name:         "Unauthorized",
 			token:        falseToken,
-			userId:       "32",
 			expectedCode: http.StatusUnauthorized,
 		},
 		{
 			name:         "User not found",
-			token:        anyUser,
-			userId:       "32",
-			expectedCode: http.StatusNotFound,
-		},
-		{
-			name:         "Invalid param",
-			token:        userToken,
-			userId:       "wrong",
-			expectedCode: http.StatusBadRequest,
-		},
-		{
-			name:         "Access denied",
-			token:        userToken,
-			userId:       "32",
-			expectedCode: http.StatusForbidden,
+			token:        anyUserToken,
+			expectedCode: http.StatusInternalServerError,
 		},
 		{
 			name:         "Success",
-			token:        adminToken,
-			userId:       "32",
+			token:        userToken,
 			expectedCode: http.StatusOK,
 		},
 	}
@@ -118,11 +101,58 @@ func TestGetUserCarbon(t *testing.T) {
 			rec := httptest.NewRecorder()
 			ctx := e.NewContext(req, rec)
 			ctx.SetPath("/")
-			ctx.SetParamNames("user_id")
-			ctx.SetParamValues(testCase.userId)
 
-			getUsercarbon := GetTotalCarbonFootprintByUser(db, []byte(secretKey))
-			if assert.NoError(t, getUsercarbon(ctx)) {
+			getNotifications := GetUserNotifications(db, []byte(secretKey))
+			if assert.NoError(t, getNotifications(ctx)) {
+				assert.Equal(t, testCase.expectedCode, rec.Code)
+			}
+
+		})
+
+	}
+
+}
+
+func TestMarkNotification(t *testing.T) {
+
+	e := helper.InitEchoTestAPI()
+	db, err := helper.InitDBTest(helper.TESTING_DB)
+	if err != nil {
+		panic(err)
+	}
+
+	secretKey := os.Getenv("SECRET_KEY")
+
+	testCases := []struct {
+		name           string
+		notificationId string
+		expectedCode   int
+	}{
+		{
+			name:           "Notification not found",
+			notificationId: "7777",
+			expectedCode:   http.StatusNotFound,
+		},
+		{
+			name:           "Success",
+			notificationId: "1",
+			expectedCode:   http.StatusOK,
+		},
+	}
+
+	for _, testCase := range testCases {
+
+		t.Run(testCase.name, func(t *testing.T) {
+
+			req := httptest.NewRequest(http.MethodGet, "/", nil)
+			rec := httptest.NewRecorder()
+			ctx := e.NewContext(req, rec)
+			ctx.SetPath("/")
+			ctx.SetParamNames("id")
+			ctx.SetParamValues(testCase.notificationId)
+
+			markNotification := MarkNotificationAsRead(db, []byte(secretKey))
+			if assert.NoError(t, markNotification(ctx)) {
 				assert.Equal(t, testCase.expectedCode, rec.Code)
 			}
 

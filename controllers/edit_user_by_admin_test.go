@@ -17,7 +17,7 @@ import (
 func TestEditUserByAdmin(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
-	db, err := helper.InitDBTest("sustain_tour_test")
+	db, err := helper.InitDBTest(helper.TESTING_DB)
 	if err != nil {
 		panic(err)
 	}
@@ -92,28 +92,28 @@ func TestEditUserByAdmin(t *testing.T) {
 			token:      falseToken,
 		},
 		{
-			name:       "User Request Not Found",
+			name:       "User request not found",
 			path:       "/",
 			expectCode: http.StatusNotFound,
 			userId:     "1900",
 			token:      anyUser,
 		},
 		{
-			name:       "Not Admin",
+			name:       "Not admin",
 			path:       "/",
 			expectCode: http.StatusForbidden,
 			userId:     "1900",
 			token:      userToken,
 		},
 		{
-			name:       "User Not Found",
+			name:       "User not found",
 			path:       "/",
 			expectCode: http.StatusNotFound,
 			userId:     "1899",
 			token:      adminToken,
 		},
 		{
-			name:       "Bind Error",
+			name:       "Bind error",
 			path:       "/",
 			expectCode: http.StatusBadRequest,
 			userId:     "1900",

@@ -34,7 +34,7 @@ func GetWisataByCategoryKesukaan(db *gorm.DB, secretKey []byte) echo.HandlerFunc
 			return c.JSON(http.StatusUnauthorized, errorResponse)
 		}
 
-		// logic
+		// Logic
 
 		var user model.User
 		result := db.Where("username = ?", username).First(&user)

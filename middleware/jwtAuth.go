@@ -2,9 +2,8 @@ package middleware
 
 import (
 	"errors"
-	"time"
-
 	"github.com/dgrijalva/jwt-go"
+	"time"
 )
 
 type Claims struct {

@@ -23,6 +23,7 @@ type User struct {
 	CategoryID        uint       `json:"category_id"`
 	CategoryKesukaan  string     `json:"category_kesukaan"`
 	ConfirmPassword   string     `json:"confirm_password"`
+	StatusCategory    bool       `gorm:"default:false" json:"status_category"`
 }
 
 // Buat struct untuk permintaan perubahan kata sandi

@@ -39,17 +39,10 @@ func EditUser(db *gorm.DB, secretKey []byte) echo.HandlerFunc {
 
 		// Logic
 
-		userID := c.Param("id")
-
 		var user model.User
-		if err := db.First(&user, userID).Error; err != nil {
+		if err := db.Where("username = ?", username).First(&user).Error; err != nil {
 			errorResponse := helper.ErrorResponse{Code: http.StatusNotFound, Message: "User not found"}
 			return c.JSON(http.StatusNotFound, errorResponse)
-		}
-
-		if user.Username != username {
-			errorResponse := helper.ErrorResponse{Code: http.StatusUnauthorized, Message: "Unauthorized to edit this user"}
-			return c.JSON(http.StatusUnauthorized, errorResponse)
 		}
 
 		err = c.Request().ParseMultipartForm(10 << 20)

@@ -1,12 +1,21 @@
 package helper
 
 import (
-	"github.com/go-gomail/gomail"
+	"log"
 	"os"
 	"strconv"
+
+	"github.com/go-gomail/gomail"
+	"github.com/joho/godotenv"
 )
 
 func SendEmailToUser(email string, subject string, body string) error {
+
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
 	// Baca variabel lingkungan untuk konfigurasi SMTP
 	smtpServer := os.Getenv("SMTP_SERVER")
 	smtpPortStr := os.Getenv("SMTP_PORT")

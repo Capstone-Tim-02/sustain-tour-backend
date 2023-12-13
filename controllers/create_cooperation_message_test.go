@@ -67,11 +67,11 @@ func TestCreateCooperationMessage(t *testing.T) {
 			Message:      "Kurang",
 		},
 		{
-			name:         "Server error",
+			name:         "Success",
 			FirstName:    "It's Oke",
-			Email:        "bryan@gmail.com",
+			Email:        "bryanrp1950@gmail.com",
 			PhoneNumber:  "0823456789",
-			expectedCode: http.StatusInternalServerError,
+			expectedCode: http.StatusCreated,
 			Message:      "Ini adalah pesan untuk mengajak kerja sama bukan kerja paksa",
 		},
 	}

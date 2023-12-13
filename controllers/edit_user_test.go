@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"bytes"
+	"mime/multipart"
 	"myproject/helper"
 	"myproject/middleware"
 	"net/http"
@@ -12,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetTransactionHistoryByInvoice(t *testing.T) {
+func TestEditUser(t *testing.T) {
 
 	e := helper.InitEchoTestAPI()
 	db, err := helper.InitDBTest(helper.TESTING_DB)
@@ -57,8 +59,8 @@ func TestGetTransactionHistoryByInvoice(t *testing.T) {
 			ctx := e.NewContext(req, rec)
 			ctx.SetPath("/")
 
-			getTransactionHistory := GetTransactionHistoryByInvoiceNumber(db, []byte(secretKey))
-			if assert.NoError(t, getTransactionHistory(ctx)) {
+			editUser := EditUser(db, []byte(secretKey))
+			if assert.NoError(t, editUser(ctx)) {
 				assert.Equal(t, tokenTestCase.expectedCode, rec.Code)
 			}
 
@@ -71,45 +73,52 @@ func TestGetTransactionHistoryByInvoice(t *testing.T) {
 	falseToken := "false_token"
 
 	testCases := []struct {
-		name          string
-		token         string
-		invoiceNumber string
-		expectedCode  int
+		name             string
+		Name             string
+		Username         string
+		Email            string
+		PhoneNumber      string
+		CategoryKesukaan string
+		token            string
+		expectedCode     int
 	}{
 		{
-			name:          "Unauthorized",
-			token:         falseToken,
-			invoiceNumber: "1700741552-565",
-			expectedCode:  http.StatusUnauthorized,
+			name:         "Unauthorized",
+			token:        falseToken,
+			expectedCode: http.StatusUnauthorized,
 		},
 		{
-			name:          "User not found",
-			token:         anyUser,
-			invoiceNumber: "1700741552-565",
-			expectedCode:  http.StatusInternalServerError,
+			name:         "User req not found",
+			token:        anyUser,
+			expectedCode: http.StatusNotFound,
 		},
 		{
-			name:          "Success",
-			token:         userToken,
-			invoiceNumber: "1700741552-565",
-			expectedCode:  http.StatusOK,
+			name:         "Invalid format",
+			token:        userToken,
+			expectedCode: http.StatusBadRequest,
 		},
 	}
 
 	for _, testCase := range testCases {
 
+		bodyBuffer := new(bytes.Buffer)
+		mw := multipart.NewWriter(bodyBuffer)
+		mw.WriteField("name", testCase.Name)
+		mw.Close()
+
 		t.Run(testCase.name, func(t *testing.T) {
 
-			req := httptest.NewRequest(http.MethodGet, "/", nil)
+			req := httptest.NewRequest(http.MethodPut, "/", bodyBuffer)
 			req.Header.Set(echo.HeaderAuthorization, "Bearer "+testCase.token)
+			req.Header.Set(echo.HeaderContentType, "multipart/form-data; boundary=----WebKitFormBoundaryAaBbCcDdEeFfGgHhIiJjKkLlMm---EOF")
 			rec := httptest.NewRecorder()
 			ctx := e.NewContext(req, rec)
 			ctx.SetPath("/")
-			ctx.SetParamNames("invoice_number")
-			ctx.SetParamValues(testCase.invoiceNumber)
+			ctx.SetParamNames("id")
+			ctx.SetParamValues("1")
 
-			getTransactionHistory := GetTransactionHistoryByInvoiceNumber(db, []byte(secretKey))
-			if assert.NoError(t, getTransactionHistory(ctx)) {
+			editUser := EditUser(db, []byte(secretKey))
+			if assert.NoError(t, editUser(ctx)) {
 				assert.Equal(t, testCase.expectedCode, rec.Code)
 			}
 

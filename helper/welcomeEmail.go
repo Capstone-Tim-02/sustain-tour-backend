@@ -14,7 +14,7 @@ func SendWelcomeEmail(userEmail, name, verificationToken string) error {
 
 	sender := smtpUsername
 	recipient := userEmail
-	subject := "Welcome to Destimate Sustainable tourism Booking App"
+	subject := "Welcome to Destimate Sustainable Tourism Booking App"
 	verificationLink := "http://localhost:8080/verify?token=" + verificationToken
 	emailBody := `
     <html>
@@ -55,7 +55,7 @@ func SendWelcomeEmail(userEmail, name, verificationToken string) error {
                 color: #666;
             }
             .btn-verify-email {
-                background-color: #ff6600;
+                background-color: #1E90FF;
                 color: #fff;
                 padding: 10px 20px;
                 border-radius: 5px;
@@ -65,18 +65,37 @@ func SendWelcomeEmail(userEmail, name, verificationToken string) error {
                 margin: 20px auto;
             }
             .btn-verify-email:hover {
-                background-color: #ff3300;
+                background-color: #007BFF;
+            }
+            .logo {
+                text-align: center;
+                margin-top: 20px;
+            }
+            .logo img {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                border: 3px solid #1E90FF;
+                transition: transform 0.3s ease-in-out;
+                margin: 0 auto;
+                display: block;
+            }
+            .logo img:hover {
+                transform: scale(1.1);
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Welcome to Our Destimate Sustainable tourism App</h1>
+            <div class="logo">
+                <img src="https://i.ibb.co/KXxHL9r/Logo-Destimate.png" alt="Destimate Logo">
+            </div>
+            <h1>Welcome to Destimate</h1>
             <div class="message">
                 <p>Hello, <strong>` + name + `</strong>,</p>
-                <p>Thank you for signing up with our wisataku booking app. You're now part of our community!</p>
+                <p>Thank you for signing up with our Destimate booking app. You're now part of our community!</p>
                 <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
-                <p><strong>Support Team:</strong> <a href="mailto:altaminiproject@gmail.com">altaminiproject@gmail.com</a></p>
+                <p><strong>Support Team:</strong> <a href="mailto:hidestimate@gmail.com">hidestimate@gmail.com</a></p>
                 <a href="` + verificationLink + `" class="btn btn-verify-email">Verify Email</a>
             </div>
             <div class="footer">

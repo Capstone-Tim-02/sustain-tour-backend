@@ -23,4 +23,5 @@ type Ticket struct {
 	TotalPotonganKodeVoucher int        `json:"total_potongan_kode_voucher"`
 	TotalPotonganPoints      int        `json:"total_potongan_points"`
 	HargaSebelumDiskon       int        `json:"harga_sebelum_diskon"`
+	UsedPointsOnPurchase     int        `json:"used_points_on_purchase"`
 }

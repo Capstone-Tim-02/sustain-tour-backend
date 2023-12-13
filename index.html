@@ -90,6 +90,7 @@
                 <li class="nav-item"><a class="nav-link" href="#updatetncByAdmin">Update Terms & Condition Category By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#deletetncByAdmin">Delete Terms & Condition Category By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getAllUserDataByAdmin">Get All User Data By Admin</a></li>
+                <li class="nav-item"><a class="nav-link" href="#getAllAdminDataByAdmin">Get All Admin Data By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#editlUserDataByAdmin">Edit User Data By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getAllTicketByAdmin">Get All Ticket By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#deleteTicketByAdmin">Delete Ticket By Admin</a></li>
@@ -102,12 +103,14 @@
                 <li class="nav-item"><a class="nav-link" href="#getTopWisata">Get Top 3  Wisata in Platform - Dashboard CMS</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getTopUserCarbon">Get Top 3 User By Carbon Footprint in Platform - Dashboard CMS</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getTotalRevenuePerMonth">Get Total Revenue in Platform - Dashboard CMS</a></li>
+                <li class="nav-item"><a class="nav-link" href="#getDashboard">Get Dashboard CMS</a></li>
                 <li class="nav-item"><a class="nav-link" href="#editWisataDataByAdmin">Edit Wisata Data By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#paidUpdate">Paid Status Update By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#deleteWisataByAdmin">Delete Wisata Data By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#deleteUserByAdmin">Delete User Data By Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getUserDataById">Get User Data By ID</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getAllWisata">Get All Wisata Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="#getAllWisataMobile">Get All Wisata Mobile Data</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getAllKota">Get All Kota Data</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getAllWisataWithUserPreference">Get All Wisata Data With User Preference</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getWisataById">Get Wisata Data By ID</a></li>
@@ -119,14 +122,18 @@
                 <li class="nav-item"><a class="nav-link" href="#bookingWisata">Booking Wisata by User</a></li>
                 <li class="nav-item"><a class="nav-link" href="#cekHarga">Cek Harga, mengeluarkan detail total diskon, total harga</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getUserWisata">Get User Booking Wisata History</a></li>
-                <li class="nav-item"><a class="nav-link" href="#getUserNotificationPayment">Get User Notification ketika sukses melakukan pembayaran</a></li>
+                <li class="nav-item"><a class="nav-link" href="#getUserNotification">Get User Notification ketika sukses melakukan pembayaran dan promo</a></li>
+                <li class="nav-item"><a class="nav-link" href="#getUserNotificationMarkRead">Mark As Read User Notification ketika sukses melakukan pembayaran dan promo</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getUserWisataWithInvoiceNumber">Get User Booking Wisata History with Invoice Number</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getPointUser">Cek User Point</a></li>
+                <li class="nav-item"><a class="nav-link" href="#getPointUserHistory">Cek User Point History</a></li>
                 <li class="nav-item"><a class="nav-link" href="#changePasswordUser">Change Password User</a></li>
                 <li class="nav-item"><a class="nav-link" href="#updateLocationUser">Update Location User</a></li>
                 <li class="nav-item"><a class="nav-link" href="#editUserData">Edit User Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="#deleteProfilPicture">Menghapus Profil Picture User</a></li>
                 <li class="nav-item"><a class="nav-link" href="#cancelBooking">Pembatalan pemesanan tiket</a></li>
                 <li class="nav-item"><a class="nav-link" href="#chatbot">Chatbot Access for User Platform</a></li>
+                <li class="nav-item"><a class="nav-link" href="#chatbotCMS">Chatbot Access for CMS Platform</a></li>
                 <li class="nav-item"><a class="nav-link" href="#CMSPesanKerjaSama">CMS Pengunjung dapat mengirim Pesan Kerja Sama / pertanyaan</a></li>
                 <li class="nav-item"><a class="nav-link" href="#getCMSPesanKerjaSama">Mendapatkan Data pesan pengunjung CMS - Admin</a></li>
                 <li class="nav-item"><a class="nav-link" href=""></a></li>
@@ -268,9 +275,11 @@
         "image3": file,
         "category_name": string
         "maps_link": string,
-        "is_open": true,
-        "description_is_open": bool,
-        "fasilitas": array,
+        "is_open": bool,
+        "description_is_open": string,
+        "fasilitas": string (gunakan , jika fasilitas lebih dari 1 nanti otomatis akan di konversi menjadi array untuk memudahkan FE),
+        "video_link" : string -> (opsional boleh diisi, boleh dikosongkan karena hanya nilai tambah untuk backend),
+        "kode" : string
     }
                             </pre>
                     <p><strong>Note</strong></p>
@@ -302,8 +311,11 @@
             },
             "maps_link": string,
             "is_open": true,
+            "description_is_open": string,
             "description_is_open": bool,
             "fasilitas": array,
+            "video_link" : string,
+            "kode" : string,
             "created_at": date,
             "UpdatedAt": date
     }
@@ -601,7 +613,56 @@
                     <p><code>GET</code></p>
                     <p><strong>Request Body</strong></p>
                     <p><strong>Note</strong></p>
-                    <p><code>Include authorization token in headers, , Jika ingin gunakan searching berdasarkan nama tambhkan params (name) dengan value isiannya</code></p>
+                    <p><code>Include authorization token in headers, , Jika ingin gunakan searching berdasarkan nama tambhkan params (name) dengan value isiannya. Paggination tambahkan query param (page) dengan value isian dan (per_page) dengan value isian </code></p>
+                    <p><strong>Response</strong></p>
+                    <pre>
+    {
+        "code" : 200
+        "error": false,
+        "users": [
+        {
+            "id": int,
+            "name": "string,
+            "username": string,
+            "email": string,
+            "phone_number": string,
+            "photo_profil": string,
+            "points": int,
+            "is_verified": bool,
+            "category_kesukaan": string,
+            "category_id": int,
+            "created_at": time
+        },
+        {
+            "id": int,
+            "name": "string,
+            "username": string,
+            "email": string,
+            "phone_number": string,
+            "photo_profil": string,
+            "points": int,
+            "is_verified": bool,
+            "category_kesukaan": string,
+            "category_id": int,
+            "created_at": time
+        },
+    ]
+    }
+                        </pre>
+                </div>
+            </div>
+
+
+            <div id="getAllAdminDataByAdmin" class="card mb-4 anchor">
+                <div class="card-body">
+                    <h2>Get All Admin Data By Admin</h2>
+                    <p><strong>URL</strong></p>
+                    <p><code>/admin</code></p>
+                    <p><strong>Method</strong></p>
+                    <p><code>GET</code></p>
+                    <p><strong>Request Body</strong></p>
+                    <p><strong>Note</strong></p>
+                    <p><code>Include authorization token in headers, , Jika ingin gunakan searching berdasarkan nama tambhkan params (name) dengan value isiannya. Paggination tambahkan query param (page) dengan value isian dan (per_page) dengan value isian </code></p>
                     <p><strong>Response</strong></p>
                     <pre>
     {
@@ -678,7 +739,7 @@
                     <p><strong>Method</strong></p>
                     <p><code>GET</code></p>
                     <p><strong>Note</strong></p>
-                    <p><code>Include authorization token in headers, , Jika ingin gunakan searching berdasarkan invoice number tambahkan params (invoice_number) dengan value isiannya</code></p>
+                    <p><code>Include authorization token in headers, , Jika ingin gunakan searching berdasarkan name dan invoice number gunakan queryparams (searching)</code></p>
                     <p><strong>Response</strong></p>
                     <pre>
    {
@@ -689,6 +750,9 @@
                 "id": int,
                 "wisata_id": int,
                 "user_id": int,
+                "name" : string,
+                "wisata_title" : string,
+                "photo_profil" : string,
                 "kode_voucher": string,
                 "used_points": int,
                 "use_all_points": bool,
@@ -705,23 +769,26 @@
                 "tenggat_pembayaran" : time,
         },
         {
-                "id": int,
-                "wisata_id": int,
-                "user_id": int,
-                "kode_voucher": string,
-                "used_points": int,
-                "use_all_points": bool,
-                "points_earned": int,
-                "total_cost": int,
-                "invoice_number": string number,
-                "quantity": int,
-                "checkin_booking": date,
-                "created_at": date,
-                "UpdatedAt": date,
-                "carbon_footprint": float,
-                "paid_status": bool,
-                "status_order" : string,
-                "tenggat_pembayaran" : time,
+            "id": int,
+            "wisata_id": int,
+            "user_id": int,
+            "name" : string,
+            "wisata_title" : string,
+            "photo_profil" : string,
+            "kode_voucher": string,
+            "used_points": int,
+            "use_all_points": bool,
+            "points_earned": int,
+            "total_cost": int,
+            "invoice_number": string number,
+            "quantity": int,
+            "checkin_booking": date,
+            "created_at": date,
+            "UpdatedAt": date,
+            "carbon_footprint": float,
+            "paid_status": bool,
+            "status_order" : string,
+            "tenggat_pembayaran" : time,
         },
     }
                             </pre>
@@ -761,23 +828,27 @@
                     <p><code>Include authorization token in headers.</code></p>
                     <p><strong>Response</strong></p>
                     <pre>
-    {
-        "code": 200,
-        "error": false,
-        "message": "Ticket details retrieved successfully",
-        "ticket_data": {
-            "Paid Status": bool,
-            "invoice_number": string,
-            "kode_voucher": string,
-            "ticket_id": int,
-            "total_cost": int,
-            "user_id": int,
-            "wisata_id": int,
-            "wisata_title": string
-            "status_order" : string,
-            "tenggat_pembayaran" : time,
-    }
-}
+                        {
+                            "code": 200,
+                            "error": false,
+                            "message": "Ticket details retrieved successfully",
+                            "ticket_data": {
+                                "ticket_id": int,
+                                "user_id": int,
+                                "name": string,
+                                "photo_profil": string,
+                                "wisata_id": int,
+                                "wisata_title": string,
+                                "total_cost": int,
+                                "invoice_number": string,
+                                "check_in_booking": time,
+                                "created_at": time,
+                                "kode_voucher": string,
+                                "paid_status": bool,
+                                "status_order": string,
+                                "tenggat_pembayaran": time -> null jika sudah melakukan pembayaran
+                            }
+                        }
                             </pre>
                 </div>
             </div>
@@ -806,7 +877,7 @@
 
             <div id="getTopUserCarbon" class="card mb-4 anchor">
                 <div class="card-body">
-                    <h2>Get Top 3 User By Carbon Footprint in Platform - Admin</h2>
+                    <h2>Get Top 4 User By Carbon Footprint in Platform - Admin</h2>
                     <p><strong>URL</strong></p>
                     <p><code>/top/emition</code></p>
                     <p><strong>Method</strong></p>
@@ -880,16 +951,28 @@
   "code": 200,
   "data": [
     {
-      "destination_title": string,
-      "total_ticket": int
+        "destination_title": string,
+        "total_ticket": int,
+        "kota" : string,
+        "photo_wisata1" : string,
+        "photo_wisata2" : string,
+        "photo_wisata3" : string
     },
     {
-      "destination_title": string,
-      "total_ticket": int
+        "destination_title": string,
+        "total_ticket": int,
+        "kota" : string,
+        "photo_wisata1" : string,
+        "photo_wisata2" : string,
+        "photo_wisata3" : string
     },
     {
-      "destination_title": string,
-      "total_ticket": int
+        "destination_title": string,
+        "total_ticket": int,
+        "kota" : string,
+        "photo_wisata1" : string,
+        "photo_wisata2" : string,
+        "photo_wisata3" : string
     }
   ],
   "error": false
@@ -968,22 +1051,83 @@
             </div>
 
 
-            <div id="getTotalRevenuePerMonth" class="card mb-4 anchor">
+            <div id="getDashboard" class="card mb-4 anchor">
                 <div class="card-body">
-                    <h2>Get Revenue per month in platform Dashbaord - Admin</h2>
+                    <h2>Get Grafik Dashbaord CMS - Admin</h2>
                     <p><strong>URL</strong></p>
-                    <p><code>/revenuebulanan/:year/:month</code></p>
+                    <p><code>/grafik</code></p>
                     <p><strong>Method</strong></p>
                     <p><code>GET</code></p>
                     <p><strong>Note</strong></p>
-                    <p><code>Include authorization token in headers.</code></p>
+                    <p><code>Include authorization token in headers, jika admin ingin memfilter berdasarkan tanggal tambahkan query params start_date dan end_date dengan value year-month-day -> example 2023-11-11</code></p>
                     <p><strong>Response</strong></p>
                     <pre>
-    {
-        "code": 200,
-        "error": false,
-        "totalIncome": int
-    }
+                        {
+                            "code": 200,
+                            "error": false,
+                            "monthlyIncome": [
+                                {
+                                    "income": int,
+                                    "month": string
+                                },
+                                {
+                                    "income": int,
+                                    "month": string
+                                },
+                                {
+                                    "income": int,
+                                    "month": string
+                                },
+                                {
+                                    "income": int,
+                                    "month": string
+                                },
+                                {
+                                    "income": int,
+                                    "month": string
+                                },
+                                {
+                                    "income": int,
+                                    "month": string
+                                }
+                            ],
+                            "timeRangeEnd": time,
+                            "timeRangeStart": time,
+                            "totalIncomeForTimeRange": int,
+                            "totalTicketPurchaseCount": int,
+                            "totalUserCount": int,
+                            "totalVisitors": int,
+                            "totalWisataCount": int
+                        }
+                            </pre>
+                </div>
+            </div>
+
+
+            <div id="getGrafikSixMonth" class="card mb-4 anchor">
+                <div class="card-body">
+                    <h2>Get Grafik Indicator For Revenue In six month - Dashboard CMS Admin</h2>
+                    <p><strong>URL</strong></p>
+                    <p><code>/grafik</code></p>
+                    <p><strong>Method</strong></p>
+                    <p><code>GET</code></p>
+                    <p><strong>Note</strong></p>
+                    <p><code>Include authorization token in headers, tambahkan query params date dengan format year/month/date example 2023-11-08</code></p>
+                    <p><strong>Response</strong></p>
+                    <pre>
+             {
+                    "code": 200,
+                    "error": false,
+                    "monthlyIncome": {
+                    "August 2023": 0,
+                    "July 2023": 0,
+                    "June 2023": 0,
+                    "November 2023": 294000,
+                    "October 2023": 0,
+                    "September 2023": 0
+                },
+                    totalSixMonthsIncome": 294000
+             }
                             </pre>
                 </div>
             </div>
@@ -1013,6 +1157,7 @@
         "is_open": true,
         "description_is_open": bool,
         "fasilitas": array,
+        "video_link" : string -> (opsional boleh diisi, boleh dikosongkan karena hanya nilai tambah untuk backend)
     }
                             </pre>
                     <p><strong>Note</strong></p>
@@ -1046,6 +1191,7 @@
         "is_open": bool,
         "description_is_open": string,
         "fasilitas": array,
+        "video_link" : string,
         "created_at": date,
         "UpdatedAt": date
     }
@@ -1073,28 +1219,40 @@
                     <p><code>Include authorization token in headers.</code></p>
                     <p><strong>Response</strong></p>
                     <pre>
-    {
-        "code": 200,
-        "error": false,
-        "message": "Paid status updated successfully",
-        "ticket": {
-            "id": int,
-            "wisata_id": int,
-            "user_id": int,
-            "kode_voucher": string,
-            "used_points": int,
-            "use_all_points": bool,
-            "points_earned": int,
-            "total_cost": int,
-            "invoice_number": string,
-            "quantity": int,
-            "checkin_booking": time,
-            "created_at": time,
-            "UpdatedAt": time,
-            "carbon_footprint": float,
-            "paid_status": bool
-    }
-}
+                        {
+                            "code": 200,
+                            "error": false,
+                            "message": "Paid status updated successfully",
+                            "ticket": {
+                                "ticket": {
+                                    "id": int,
+                                    "wisata_id": int,
+                                    "user_id": int,
+                                    "kode_voucher": string,
+                                    "used_points": int,
+                                    "use_all_points": bool,
+                                    "points_earned": int,
+                                    "total_cost": int,
+                                    "invoice_number": string,
+                                    "quantity": int,
+                                    "checkin_booking": time,
+                                    "created_at": time,
+                                    "UpdatedAt": time,
+                                    "carbon_footprint": float,
+                                    "paid_status": bool,
+                                    "status_order": string,
+                                    "tenggat_pembayaran": time - null jika sudah melakukan pembayaran,
+                                    "total_potongan_kode_voucher": int,
+                                    "total_potongan_points": int,
+                                    "harga_sebelum_diskon": int
+                                },
+                                "user_profile": {
+                                    "user_id": int,
+                                    "username": string,
+                                    "photo_profil": string
+                                }
+                            }
+                        }
                             </pre>
                 </div>
             </div>
@@ -1179,7 +1337,87 @@
                     <p><code>/wisata</code></p>
                     <p><strong>Method</strong></p>
                     <p><code>GET</code></p>
-                    <p><strong>params (adding pagination feature), Jika ingin menggunakan searching  tempat wisata berdasarkan title tambahkan data (title) dengan value isiannya pada params, jika ingin searching berdasarkan kota tambahkan data (kota) dengan values isiannya pada params, jika ingin seraching berdasarkan category_name tambahkan data (category_name) dan value inputannya pada params</strong></p>
+                    <p><strong>params (adding pagination feature), Jika ingin menggunakan searching  berdasarkan title,category_name,kota gunakan query params (search) beserta value isiannya</strong></p>
+                    <p><strong>Note</strong></p>
+                    <p><code>Include authorization token in headers.</code></p>
+                    <p><strong>Response</strong></p>
+                    <pre>
+    {
+        "code": 200,
+        "error": false,
+        "wisatas": [
+            {
+                "id": int,
+                "kode" : string,
+                "title": string,
+                "location": string,
+                "description": string,
+                "price": int,
+                "lat": float,
+                "long": float,
+                "user_id": int,
+                "available_tickets": int,
+                "photo_wisata1": string,
+                "photo_wisata2": string,
+                "photo_wisata3": string,
+                "category_id": int,
+                "category": {
+                    "id": int,
+                    "category_name": string,
+                    "created_at": time
+                },
+                "maps_link": string,
+                "is_open": bool,
+                "description_is_open": string,
+                "fasilitas": array,
+                "kode" : string,
+                "created_at": time,
+                "UpdatedAt": time
+            },
+            {
+                "id": int,
+                "kode" : string,
+                "title": string,
+                "location": string,
+                "description": string,
+                "price": int,
+                "lat": float,
+                "long": float,
+                "user_id": int,
+                "available_tickets": int,
+                "photo_wisata1": string,
+                "photo_wisata2": string,
+                "photo_wisata3": string,
+                "category_id": int,
+                "category": {
+                    "id": int,
+                    "category_name": string,
+                    "created_at": time
+                },
+                "maps_link": string,
+                "is_open": bool,
+                "description_is_open": string,
+                "fasilitas": array,
+                "kode" : string,
+                "created_at": time,
+                "UpdatedAt": time
+            },
+        ]
+    }
+                            </pre>
+                </div>
+            </div>
+
+
+
+            <div id="getAllWisataMobile" class="card mb-4 anchor">
+                <div class="card-body">
+                    <h2>Get All Wisata Mobile Data</h2>
+                    <p><strong>URL</strong></p>
+                    <p><code>/wisata/mobile</code></p>
+                    <p><strong>Method</strong></p>
+                    <p><code>GET</code></p>
+                    <p><strong>params (adding pagination feature), Jika ingin menggunakan searching  berdasarkan title,category_name,kota gunakan query params (title, category_name, kota)</strong></p>
                     <pre>
     {
         "page": int, // untuk menentukan isi page
@@ -1199,6 +1437,7 @@
         "wisatas": [
             {
                 "id": int,
+                "kode" : string,
                 "title": string,
                 "location": string,
                 "description": string,
@@ -1220,11 +1459,13 @@
                 "is_open": bool,
                 "description_is_open": string,
                 "fasilitas": array,
+                "kode" : string,
                 "created_at": time,
                 "UpdatedAt": time
             },
             {
                 "id": int,
+                "kode" : string,
                 "title": string,
                 "location": string,
                 "description": string,
@@ -1246,6 +1487,7 @@
                 "is_open": bool,
                 "description_is_open": string,
                 "fasilitas": array,
+                "kode" : string,
                 "created_at": time,
                 "UpdatedAt": time
             },
@@ -1318,6 +1560,7 @@
                 "is_open": false,
                 "description_is_open": "",
                 "fasilitas": "",
+                "kode" : string,
                 "created_at": time,
                 "UpdatedAt": time
             },
@@ -1344,6 +1587,7 @@
                 "is_open": false,
                 "description_is_open": "",
                 "fasilitas": "",
+                "kode" : string,
                 "created_at": time,
                 "UpdatedAt": time
             },
@@ -1369,6 +1613,7 @@
         "error": false,
         "wisata": {
             "id": int,
+            "kode" : string
             "title": string,
             "location": string,
             "description": string,
@@ -1390,6 +1635,7 @@
             "is_open": bool,
             "description_is_open": string,
             "fasilitas": array,
+            "kode" : string,
             "created_at": time,
             "UpdatedAt": time
     }
@@ -1445,7 +1691,8 @@
                 "tanggal_kadaluarsa": time,
                 "image_voucher": string
                 "deskripsi": string,
-                "peraturan": string
+                "peraturan": string,
+                "created_at": time
              },
             {
                 "id": int,
@@ -1457,7 +1704,8 @@
                 "tanggal_kadaluarsa": time,
                 "image_voucher": string
                 "deskripsi": string,
-                "peraturan": string
+                "peraturan": string,
+                "created_at": time
             }
     ]
     }
@@ -1490,7 +1738,8 @@
         "tanggal_kadaluarsa": time,
         "image_voucher": string
         "deskripsi": string,
-        "peraturan": string
+        "peraturan": string,
+        "created_at": time
     },
 }
                             </pre>
@@ -1635,21 +1884,25 @@
                     <p><code>Include authorization token in headers.</code></p>
                     <p><strong>Response</strong></p>
                     <pre>
-{
-    "code": 200,
-    "data": {
-        "error": false,
-        "kode_voucher": string,
-        "message": string,
-        "points_earned": int,
-        "total_cost": int,
-        "total_discount": int,
-        "used_points": int,
-        "user_points": int
-    },
-    "error": false,
-    "message": "Price and discount details calculated successfully"
-}
+                        {
+                            "code": 200,
+                            "data": {
+                                "carbon_footprint": float,
+                                "error": false,
+                                "harga_sebelum_diskon": int,
+                                "kode_voucher": string,
+                                "message": string,
+                                "point_message": string,
+                                "points_earned": int,
+                                "quantity": int,
+                                "total_cost": int,
+                                "total_potongan_kode_voucher": int,
+                                "total_potongan_points": int,
+                                "used_points": int
+                            },
+                            "error": false,
+                            "message": "Ticket Wisata price checked successfully"
+                        }
                             </pre>
                 </div>
             </div>
@@ -1687,8 +1940,12 @@
                 "photo_wisata2": string,
                 "photo_wisata3": string,
                 "points_earned": int,
+                "points_used": int,
                 "status_order" : string,
-                "tenggat_pembayaran" : time
+                "tenggat_pembayaran" : time,
+                "harga_sebelum_diskon":  int,
+				"total_potongan_kode_voucher": int,
+				"total_potongan_points": int,
             },
             {
                 "carboon_footprint": float,
@@ -1707,8 +1964,12 @@
                 "photo_wisata2": string,
                 "photo_wisata3": string,
                 "points_earned": int,
+                "points_used": int,
                 "status_order" : string,
-                "tenggat_pembayaran" : time
+                "tenggat_pembayaran" : time,
+                "harga_sebelum_diskon":  int,
+				"total_potongan_kode_voucher": int,
+				"total_potongan_points": int
             },
         ]
 }
@@ -1716,9 +1977,9 @@
                 </div>
             </div>
 
-            <div id="getUserNotificationPayment" class="card mb-4 anchor">
+            <div id="getUserNotification" class="card mb-4 anchor">
                 <div class="card-body">
-                    <h2>Get User Notification ketika sukses melakukan pembayaran</h2>
+                    <h2>Get User Notification saat konfirmasi pembayaran dan promo</h2>
                     <p><strong>URL</strong></p>
                     <p><code>/user/notification</code></p>
                     <p><strong>Method</strong></p>
@@ -1728,27 +1989,51 @@
                     <p><strong>Response</strong></p>
                     <pre>
 
-{
-    "code": 200,
-    "error": false,
-    "message": "User notifications retrieved successfully",
-    "notifications": [
-        {
-            "id": int,
-            "user_id": int,
-            "message": string,
-            "status": string,
-            "created_at": time
-        },
-        {
-            "id": 1,
-            "user_id": int,
-            "message": string,
-            "status": string,
-            "created_at": time
-        }
-    ]
-}
+                        {
+                            "code": 200,
+                            "error": false,
+                            "message": "User notifications retrieved successfully",
+                            "notifications": [
+                                {
+                                    "id": int,
+                                    "title": string,
+                                    "message": string,
+                                    "promo_id": int,
+                                    "status": string,
+                                    "is_read": bool
+                                },
+                                {
+                                    "id": int,
+                                    "user_id": int,
+                                    "message": string,
+                                    "status": string,
+                                    "title": string,
+                                    "invoice_number": string,
+                                    "created_at": date,
+                                    "is_read": bool
+                                }
+                            ]
+                        }
+                            </pre>
+                </div>
+            </div>
+
+            <div id="getUserNotificationMarkRead" class="card mb-4 anchor">
+                <div class="card-body">
+                    <h2>Mark As Read User Notification saat konfirmasi pembayaran dan promo</h2>
+                    <p><strong>URL</strong></p>
+                    <p><code>/user/notification/:id</code></p>
+                    <p><strong>Method</strong></p>
+                    <p><code>PUT</code></p>
+                    <p><strong>Note</strong></p>
+                    <p><code>Include authorization token in headers.</code></p>
+                    <p><strong>Response</strong></p>
+                    <pre>
+                        {
+                            "code": 200,
+                            "error": false,
+                            "message": "Notification marked as read successfully"
+                        }
                             </pre>
                 </div>
             </div>
@@ -1820,6 +2105,38 @@
         "message": "User's points retrieved successfully",
         "points": int
     }
+                            </pre>
+                </div>
+            </div>
+
+            <div id="getPointUserHistory" class="card mb-4 anchor">
+                <div class="card-body">
+                    <h2>Get Point User History </h2>
+                    <p><strong>URL</strong></p>
+                    <p><code>/user/points/history</code></p>
+                    <p><strong>Method</strong></p>
+                    <p><code>GET</code></p>
+                    <p><strong>Note</strong></p>
+                    <p><code>Include authorization token in headers. poinst_earned merupakan (+) pendapatan , points_used merupakan (-) pemakaian</code></p>
+                    <p><strong>Response</strong></p>
+                    <pre>
+                        {
+                            "code": 200,
+                            "error": false,
+                            "message": "User's points history retrieved successfully",
+                            "points_history": [
+                                {
+                                    "points_earned": int,
+                                    "wisata_name": string,
+                                    "message" : string
+                                },
+                                {
+                                    "points_used": int,
+                                    "wisata_name": string
+                                    "message" : string
+                                }
+                            ]
+                        }
                             </pre>
                 </div>
             </div>
@@ -1988,6 +2305,26 @@
                 </div>
             </div>
 
+            <div id="deleteProfilPicture" class="card mb-4 anchor">
+                <div class="card-body">
+                    <h2>Menghapus Foto Profil User</h2>
+                    <p><strong>URL</strong></p>
+                    <p><code>/user/photo/id</code></p>
+                    <p><strong>Method</strong></p>
+                    <p><code>DELETE</code></p>
+                    <p><strong>Note</strong></p>
+                    <p><code>Include authorization token in headers.</code></p>
+                    <p><strong>Response</strong></p>
+                    <pre>
+                        {
+                            "code": 200,
+                            "error": false,
+                            "message": "User profile photo deleted successfully"
+                        }
+                            </pre>
+                </div>
+            </div>
+
             <div id="cancelBooking" class="card mb-4 anchor">
                 <div class="card-body">
                     <h2>Pembatalan booking ticket</h2>
@@ -2020,6 +2357,28 @@
                     <pre>
    {
     "message": "Saya butuh rekomendasi Wisata di jakarta"
+    }
+                        </pre>
+                    <p><strong>Response</strong></p>
+                    <pre>
+    {
+        "message": "string",
+    }
+                        </pre>
+                </div>
+            </div>
+
+            <div id="chatbotCMS" class="card mb-4">
+                <div class="card-body">
+                    <h2>Chatbot Access Powered By OpenAI GPT 3.5 for CMS</h2>
+                    <p><strong>URL</strong></p>
+                    <p><code>/chatbot/recommend-promo</code></p>
+                    <p><strong>Method</strong></p>
+                    <p><code>POST</code></p>
+                    <p><strong>Request Body - Raw Json</strong></p>
+                    <pre>
+   {
+    "message": "saat ini penjualan saya sedang menurun, kira kira bisakah berikan saya rekomendasi promo agar pengunjung kembali ramai. berikan saya nama promo dan jumlah potongan persen yang dapat menarik pengguna"
     }
                         </pre>
                     <p><strong>Response</strong></p>
@@ -2082,6 +2441,7 @@
             "first_name": string,
             "last_name" : string,
             "email": string,
+            "phone_number" : string,
             "message": string,
             "created_at": time
         }

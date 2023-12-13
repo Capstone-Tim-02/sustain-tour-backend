@@ -27,6 +27,7 @@ func SetupRoutes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/verify", controllers.VerifyEmail(db))
 	e.POST("/signin", controllers.Signin(db, secretKey))
 	e.POST("/admin/signin", controllers.AdminSignin(db, secretKey))
+	e.GET("/profile", controllers.GetProfile(db, secretKey))
 	e.PUT("/user/change-password", controllers.ChangePassword(db, secretKey))
 	e.POST("/wisata/create", controllers.CreateWisata(db, secretKey))
 	e.GET("/wisata", controllers.GetWisatas(db, secretKey))
@@ -34,8 +35,9 @@ func SetupRoutes(e *echo.Echo, db *gorm.DB) {
 	e.PUT("/user/:id", controllers.EditUser(db, secretKey))
 	e.PUT("/admin/user/:id", controllers.EditUserByAdmin(db, secretKey))
 	e.DELETE("/admin/user/:id", controllers.DeleteUserByAdmin(db, secretKey))
+	e.DELETE("/admin/:id", controllers.DeleteAdminByAdmin(db, secretKey))
 	e.GET("/admin/user", controllers.GetAllUsersByAdmin(db, secretKey))
-	e.GET("/admin/carbonfootprint", controllers.GetTotalCarbonFootprintByAdmin(db, secretKey))
+	e.GET("/admin", controllers.GetAllAdminsByAdmin(db, secretKey))
 	e.GET("/carbonfootprint/:user_id", controllers.GetTotalCarbonFootprintByUser(db, secretKey))
 	e.POST("/user/buy", controllers.BuyTicket(db, secretKey))
 	e.GET("/carbonfootprintwisata/:wisata_id", controllers.GetTotalCarbonFootprintByWisataID(db, secretKey))
@@ -47,17 +49,14 @@ func SetupRoutes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/user/promo", controllers.GetPromos(db, secretKey))
 	e.GET("/user/preferences", controllers.GetWisataByCategoryKesukaan(db, secretKey))
 	e.GET("/admin/ticket/:invoiceNumber", controllers.GetTicketByInvoiceNumber(db, secretKey))
-	e.GET("/totalwisata", controllers.GetTotalWisataCount(db, secretKey))
-	e.GET("/totaluser", controllers.GetTotalUserCount(db, secretKey))
-	e.GET("/totaltransaksi", controllers.GetTotalTicketPurchaseCountByAdmin(db, secretKey))
-	e.GET("/revenuebulanan", controllers.GetMonthlyTicketIncomeByAdmin(db, secretKey))
-	e.GET("/grafik", controllers.GetAdminDashboardData(db, secretKey))
+	e.GET("/dashboard", controllers.GetAdminDashboardData(db, secretKey))
 	e.PUT("/admin/ticket/:invoiceId", controllers.UpdatePaidStatus(db, secretKey))
 	e.PUT("/admin/updatewisata/:id", controllers.UpdateWisata(db, secretKey))
 	e.PUT("/userlocation/:id", controllers.EditUserLocation(db, secretKey))
 	e.GET("/user/points", controllers.GetUserPoints(db, secretKey))
 	e.POST("/cekharga", controllers.CheckTicketPrice(db, secretKey))
 	e.GET("/user/:user_id", controllers.GetUserDataByID(db, secretKey))
+	e.GET("/user/points/history", controllers.GetPointsHistory(db, secretKey))
 	e.PUT("/admin/wisata/:id", controllers.UpdateWisata(db, secretKey))
 	e.GET("/admin/ticket", controllers.GetAllTicketsByAdmin(db, secretKey))
 
@@ -111,10 +110,16 @@ func SetupRoutes(e *echo.Echo, db *gorm.DB) {
 	// Get Top Wisata
 	e.GET("/top/wisata", controllers.GetTopWisata(db, secretKey))
 	e.GET("/top/emition", controllers.GetTopEmition(db, secretKey))
-	e.GET("/totalvisitor", controllers.GetTotalVisitors(db, secretKey))
 
 	//cancel ticket
 	e.DELETE("/user/ticket/:invoice_number", controllers.CancelTicket(db, secretKey))
+
+	promoChatbotUsecase := controllers.NewPromoChatbotUsecase() // Inisialisasi use case
+	e.POST("/chatbot/recommend-promo", func(c echo.Context) error {
+		return controllers.RecommendPromoChatbot(c, promoChatbotUsecase, db, secretKey) // Panggil fungsi dengan use case dan instance Gorm DB
+	})
+
+	e.PUT("/user/notification/:id", controllers.MarkNotificationAsRead(db, secretKey))
 }
 
 func getSecretKeyFromEnv() string {

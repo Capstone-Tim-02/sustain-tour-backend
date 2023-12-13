@@ -4,22 +4,39 @@ import (
 	"bytes"
 	"cloud.google.com/go/storage"
 	"context"
+	"encoding/base64"
 	"fmt"
 	"google.golang.org/api/option"
 	"io"
 	"mime/multipart"
+	"os"
 	"strings"
 )
+
+func decodeBase64Credential() ([]byte, error) {
+	credentialsBase64 := os.Getenv("CREDENTIALS")
+	credentialsBytes, err := base64.StdEncoding.DecodeString(credentialsBase64)
+	if err != nil {
+		fmt.Println("Error decoding base64 credential")
+		return nil, err
+	}
+	return credentialsBytes, nil
+}
 
 func UploadImageToGCS(imageData []byte, imageName string) (string, error) {
 	ctx := context.Background()
 
-	client, err := storage.NewClient(ctx, option.WithCredentialsFile("key/credentials.json"))
+	credentialsBytes, err := decodeBase64Credential()
 	if err != nil {
 		return "", err
 	}
 
-	bucketName := "relaverse"
+	client, err := storage.NewClient(ctx, option.WithCredentialsJSON(credentialsBytes))
+	if err != nil {
+		return "", err
+	}
+
+	bucketName := "destimate"
 
 	object := client.Bucket(bucketName).Object(imageName)
 	wc := object.NewWriter(ctx)
@@ -45,26 +62,4 @@ func IsImageFile(file *multipart.FileHeader) bool {
 
 func IsFileSizeExceeds(file *multipart.FileHeader, maxSize int64) bool {
 	return file.Size > maxSize
-}
-
-func DeleteImageFromGCS(imageURL string) error {
-	ctx := context.Background()
-
-	client, err := storage.NewClient(ctx, option.WithCredentialsFile("key/credentials.json"))
-	if err != nil {
-		return err
-	}
-
-	bucketName := "relaverse"
-
-	// Mendapatkan nama objek dari URL gambar
-	imageParts := strings.Split(imageURL, "/")
-	objectName := imageParts[len(imageParts)-1]
-
-	err = client.Bucket(bucketName).Object(objectName).Delete(ctx)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

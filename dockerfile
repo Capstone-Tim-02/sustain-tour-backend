@@ -1,15 +1,28 @@
-FROM golang:1.21.0-alpine
+FROM golang:alpine
+
+ENV DB_HOST=
+ENV DB_PORT=
+ENV DB_USERNAME=
+ENV DB_PASSWORD=
+ENV DB_NAME=
+
+ENV SECRET_KEY=
+
+ENV OPENAI_API_KEY=
+ENV SMTP_SERVER=
+ENV SMTP_PORT=
+ENV SMTP_USERNAME=
+ENV SMTP_PASSWORD=
+ENV CREDENTIALS=
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
-
 COPY . .
 
-RUN go build -o main.app .
+RUN go mod download
+
+RUN go build -o main
 
 EXPOSE 8080
 
-CMD ["/app/main.app"]
+CMD ["./main"]
